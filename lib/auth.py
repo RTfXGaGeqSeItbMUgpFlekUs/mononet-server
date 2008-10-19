@@ -6,6 +6,7 @@
 # Import standard modules
 
 import sha
+import sqlite3
 
 
 # Constants
@@ -13,6 +14,8 @@ import sha
 AUTH_NOTEXIST = 100
 AUTH_INCORRECTPASSWORD = 101
 AUTH_CORRECT = 102
+AUTH_EXIST = 103
+AUTH_DONE = 104
 
 
 # Main code
@@ -23,26 +26,25 @@ class Auth:
 	db = {}
 
 	def __init__(self, authdb):
-		self.authdb_file = authdb
-		self.authdb = open(self.authdb_file, 'r+a')
-		self.reload()
+		self.authdb = sqlite3.connect(authdb)
 
 	def register(self, username, password):
 		'''Register the user in the database.'''
-		# Create a database entry
-		entry = '%s:%s;' % (username, self.gethash(password))
+		if self.exists(username) == True:
+			return AUTH_EXIST
 		# Store entry in the database
-		self.authdb.write(entry)
-		self.authdb.flush()
+		c = self.authdb.cursor()
+		c.execute('insert into users values (\'%s\', \'%s\')' % (username,
+				self.gethash(password)))
+		self.authdb.commit()
+		c.close()
+		self.reload()
+		return AUTH_DONE
 
 	def check(self, username, password):
 		'''Checks if the user is registered in the database, and returns
 		the appropriate response.'''
-		# Check if the user exists
-		exists = False
-		for username in self.db:
-			if username == username: exists = True
-		if exists == False:
+		if self.exists(username) == False:
 			return AUTH_NOTEXIST
 		# Check for the correct password
 		correct_password = False
@@ -56,22 +58,26 @@ class Auth:
 		'''Reloads the database.'''
 		# Clear the database
 		self.db = {}
-		# Reload the file
-		self.close()
-		self.authdb = open(self.authdb_file, 'r+a')
-		content = self.authdb.read()
 		# Get entries
-		entries = content.split(';')
-		entries = entries[:len(entries)-1]
+		c = self.authdb.cursor()
+		c.execute('select * from users')
+		entries = c.fetchall()
+		c.close()
+		# Fill the database
 		for entry in entries:
-			username = entry.split(':')[0]
-			password = entry.split(':')[1]
+			username = entry[0]
+			password = entry[1]
 			# Set the passwords
 			self.db[username] = password
+		return AUTH_DONE
+
+	def exists(self, username):
+		'''Check if a user exists.'''
+		exists = False
+		for username in self.db:
+			if username == username: exists = True
+		return exists
 
 	def gethash(self, what):
 		return sha.new(what).hexdigest()
-
-	def close(self):
-		self.authdb.close()
 

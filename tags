@@ -1,0 +1,12 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+Auth	lib/auth.py	/^class Auth:$/;"	c
+__init__	lib/auth.py	/^	def __init__(self, authdb):$/;"	m	class:Auth
+check	lib/auth.py	/^	def check(self, username, password):$/;"	m	class:Auth
+gethash	lib/auth.py	/^	def gethash(self, what):$/;"	m	class:Auth
+register	lib/auth.py	/^	def register(self, username, password):$/;"	m	class:Auth
+reload	lib/auth.py	/^	def reload(self):$/;"	m	class:Auth

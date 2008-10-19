@@ -24,11 +24,11 @@ class Auth:
 
 	def __init__(self, authdb):
 		self.authdb_file = authdb
+		self.authdb = open(self.authdb_file, 'r+a')
 		self.reload()
 
 	def register(self, username, password):
 		'''Register the user in the database.'''
-		self.authdb = open(self.authdb_file, 'w')
 		# Create a database entry
 		entry = '%s:%s;' % (username, self.gethash(password))
 		# Store entry in the database
@@ -38,7 +38,6 @@ class Auth:
 	def check(self, username, password):
 		'''Checks if the user is registered in the database, and returns
 		the appropriate response.'''
-		self.authdb = open(self.authdb_file, 'r')
 		# Check if the user exists
 		exists = False
 		for username in self.db:
@@ -58,7 +57,8 @@ class Auth:
 		# Clear the database
 		self.db = {}
 		# Reload the file
-		self.authdb = open(self.authdb_file, 'r')
+		self.close()
+		self.authdb = open(self.authdb_file, 'r+a')
 		content = self.authdb.read()
 		# Get entries
 		entries = content.split(';')
@@ -71,4 +71,7 @@ class Auth:
 
 	def gethash(self, what):
 		return sha.new(what).hexdigest()
+
+	def close(self):
+		self.authdb.close()
 

@@ -6,7 +6,7 @@
 # Import standard modules
 import socket
 
-def process(self, socket_info):
+def process(socket_info):
 	'''Process the socket.'''
 	(socket, port) = socket_info
 	while 1:

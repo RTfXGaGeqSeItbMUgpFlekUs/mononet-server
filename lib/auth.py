@@ -11,11 +11,11 @@ import sqlite3
 
 # Constants
 
-AUTH_NOTEXIST = 100
-AUTH_INCORRECTPASSWORD = 101
-AUTH_CORRECT = 102
-AUTH_EXIST = 103
-AUTH_DONE = 104
+NOTEXIST = 100
+INCORRECTPASSWORD = 101
+CORRECT = 102
+EXIST = 103
+DONE = 104
 
 
 # Main code
@@ -31,7 +31,7 @@ class Auth:
 	def register(self, username, password):
 		'''Register the user in the database.'''
 		if self.exists(username) == True:
-			return AUTH_EXIST
+			return EXIST
 		# Store entry in the database
 		c = self.authdb.cursor()
 		c.execute('insert into users values (\'%s\', \'%s\')' % (username,
@@ -39,19 +39,19 @@ class Auth:
 		self.authdb.commit()
 		c.close()
 		self.reload()
-		return AUTH_DONE
+		return DONE
 
 	def check(self, username, password):
 		'''Checks if the user is registered in the database, and returns
 		the appropriate response.'''
 		if self.exists(username) == False:
-			return AUTH_NOTEXIST
+			return NOTEXIST
 		# Check for the correct password
 		correct_password = False
 		if self.db[username] == self.gethash(password):
-			return AUTH_CORRECT
+			return CORRECT
 		else:
-			return AUTH_INCORRECTPASSWORD
+			return INCORRECTPASSWORD
 		
 
 	def reload(self):
@@ -69,13 +69,13 @@ class Auth:
 			password = entry[1]
 			# Set the passwords
 			self.db[username] = password
-		return AUTH_DONE
+		return DONE
 
 	def exists(self, username):
 		'''Check if a user exists.'''
 		exists = False
-		for username in self.db:
-			if username == username: exists = True
+		for db_username in self.db:
+			if username == db_username: exists = True
 		return exists
 
 	def gethash(self, what):

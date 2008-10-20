@@ -5,8 +5,13 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.7	//
 Auth	lib/auth.py	/^class Auth:$/;"	c
+Server	lib/server.py	/^class Server:$/;"	c
 __init__	lib/auth.py	/^	def __init__(self, authdb):$/;"	m	class:Auth
+__init__	lib/server.py	/^	def __init__(self, addr):$/;"	m	class:Server
 check	lib/auth.py	/^	def check(self, username, password):$/;"	m	class:Auth
+exists	lib/auth.py	/^	def exists(self, username):$/;"	m	class:Auth
 gethash	lib/auth.py	/^	def gethash(self, what):$/;"	m	class:Auth
+poll	lib/server.py	/^	def poll(self):$/;"	m	class:Server
+process	lib/server.py	/^def process(self, socket_info):$/;"	f
 register	lib/auth.py	/^	def register(self, username, password):$/;"	m	class:Auth
 reload	lib/auth.py	/^	def reload(self):$/;"	m	class:Auth
